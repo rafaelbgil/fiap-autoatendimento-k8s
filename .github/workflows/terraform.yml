@@ -51,13 +51,22 @@ jobs:
       run: aws eks update-kubeconfig --name fiap-cluster-k8s
     
     - name: Assegurar secrets de banco para o k8s
-      run: kubectl create secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD"
+      run: kubectl create secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD" -o yaml > fiap-secrets-db.yml
+
+    - name: Aplicar secrets de banco
+      run: kubectl apply -f fiap-secrets-db.yml
 
     - name: Assegurar secrets da aws para o k8s
-      run: kubectl create secret generic fiap-secrets-aws --from-literal=AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" --from-literal=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION"
+      run: kubectl create secret generic fiap-secrets-aws --from-literal=AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" --from-literal=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" -o yaml > fiap-secrets-aws.yml
+
+    - name: Aplicar secrets da aws
+      run: kubectl apply -f fiap-secrets-aws.yml
 
     - name: Assegurar secrets do cognito para o k8s
-      run: kubectl create secret generic fiap-secrets-cognito --from-literal=COGNITO_POOL="$COGNITO_POOL" --from-literal=COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" --from-literal=COGNITO_CLIENT_SECRET="$COGNITO_CLIENT_SECRET"
+      run: kubectl create secret generic fiap-secrets-cognito --from-literal=COGNITO_POOL="$COGNITO_POOL" --from-literal=COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" --from-literal=COGNITO_CLIENT_SECRET="$COGNITO_CLIENT_SECRET" -o yaml > fiap-secrets-cognito.yaml
 
+    - name: Aplicar secrets do cognito
+      run: kubectl apply -f fiap-secrets-cognito.yml
+      
     - name: Deploy dos yamls do k8s
       run: kubectl apply -f k8s/
