@@ -63,7 +63,7 @@ jobs:
       run: kubectl apply -f fiap-secrets-aws.yml
 
     - name: Assegurar secrets do cognito para o k8s
-      run: kubectl create --dry-run=client secret generic fiap-secrets-cognito --from-literal=COGNITO_POOL="$COGNITO_POOL" --from-literal=COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" --from-literal=COGNITO_CLIENT_SECRET="$COGNITO_CLIENT_SECRET" -o yaml > fiap-secrets-cognito.yaml
+      run: kubectl create --dry-run=client secret generic fiap-secrets-cognito --from-literal=COGNITO_POOL="$COGNITO_POOL" --from-literal=COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" --from-literal=COGNITO_CLIENT_SECRET="$COGNITO_CLIENT_SECRET" -o yaml > fiap-secrets-cognito.yml
 
     - name: Aplicar secrets do cognito
       run: kubectl apply -f fiap-secrets-cognito.yml
