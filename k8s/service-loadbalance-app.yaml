@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app-autoatendimento
+  name: app-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+spec:
+  ports:
+  - name: port-http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app-autoatendimento
+  type: LoadBalancer
