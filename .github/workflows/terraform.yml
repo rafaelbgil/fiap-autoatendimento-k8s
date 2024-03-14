@@ -1,0 +1,63 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      COGNITO_POOL: ${{ secrets.COGNITO_POOL }}
+      COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+      COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
+      
+      
+    # Utilizar o bash para comandos do terraform
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout do repositorio
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # inicializar o terraform
+    - name: Terraform Init
+      run: terraform init
+
+    # Gerar plano de execucao
+    - name: Terraform Plan
+      run: terraform plan -input=false
+
+    - name: Aplicar mudanca via terraform
+      run: terraform apply -auto-approve -input=false
+
+    # Assegurar deploy do k8s
+    - name: Configurar kubeconfig
+      run: aws eks update-kubeconfig --name fiap-cluster-k8s
+    
+    - name: Assegurar secrets de banco para o k8s
+      run: kubectl create secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD"
+
+    - name: Assegurar secrets da aws para o k8s
+      run: kubectl create secret generic fiap-secrets-aws --from-literal=AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" --from-literal=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION"
+
+    - name: Assegurar secrets do cognito para o k8s
+      run: kubectl create secret generic fiap-secrets-cognito --from-literal=COGNITO_POOL="$COGNITO_POOL" --from-literal=COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" --from-literal=COGNITO_CLIENT_SECRET="$COGNITO_CLIENT_SECRET"
+
+    - name: Deploy dos yamls do k8s
+      run: kubectl apply -f k8s/
