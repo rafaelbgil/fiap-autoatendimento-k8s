@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: catalogo
+  name: catalogo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogo
+  template:
+    metadata:
+      labels:
+        app: catalogo
+    spec:
+      containers:
+        - image: rafaelbgil/fiap-autoatendimento-app-catalogo:1.1
+          name: catalogo
+          env:
+            - name: DATABASE_PORT
+              value: "3306"
+            - name: DATABASE_NAME
+              value: fiap
+          #Secrets como variavies para acesso ao banco
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-db
+                  key: DATABASE_HOST_CATALOGO
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-db
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-db
+                  key: DATABASE_PASSWORD
+            - name: DJANGO_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-db
+                  key: DJANGO_KEY
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 100m

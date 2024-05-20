@@ -19,6 +19,7 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       DATABASE_USER: ${{ secrets.DATABASE_USER }}
       DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+      DATABASE_HOST_CATALOGO: ${{ DATABASE_HOST_CATALOGO }}
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       COGNITO_POOL: ${{ secrets.COGNITO_POOL }}
       COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
@@ -53,7 +54,7 @@ jobs:
       run: aws eks update-kubeconfig --name fiap-cluster-k8s
     
     - name: Assegurar secrets de banco para o k8s
-      run: kubectl create --dry-run=client secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD" --from-literal=DJANGO_KEY="$DJANGO_KEY" -o yaml > fiap-secrets-db.yml
+      run: kubectl create --dry-run=client secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_HOST_CATALOGO="$DATABASE_HOST_CATALOGO" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD" --from-literal=DJANGO_KEY="$DJANGO_KEY" -o yaml > fiap-secrets-db.yml
 
     - name: Aplicar secrets de banco
       run: kubectl apply -f fiap-secrets-db.yml

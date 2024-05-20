@@ -22,6 +22,8 @@ spec:
               value: "mongodb"
             - name: URL_DOMINIO
               value: "https://teste.com.br"
+            - name: PEDIDO_API_URL
+              value: "http://pedido:8000"
             - name: MERCADOPAGO_TOKEN
               valueFrom:
                 secretKeyRef:
