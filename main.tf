@@ -74,3 +74,4 @@ resource "aws_eks_node_group" "fiap_node_group" {
   }
 }
 
+
