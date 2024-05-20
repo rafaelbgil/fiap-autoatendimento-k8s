@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cobranca
+  name: cobranca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cobranca
+  template:
+    metadata:
+      labels:
+        app: cobranca
+    spec:
+      containers:
+        - image: rafaelbgil/fiap-autoatendimento-app-cobranca:1.0
+          name: cobranca
+          env:
+            - name: MONGODB_SERVER
+              value: "mongodb"
+            - name: URL_DOMINIO
+              value: "https://teste.com.br"
+            - name: MERCADOPAGO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-cobranca
+                  key: MERCADOPAGO_TOKEN
+            - name: MERCADOPAGO_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-cobranca
+                  key: MERCADOPAGO_EMAIL
+            - name: DJANGO_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-db
+                  key: DJANGO_KEY
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 100m

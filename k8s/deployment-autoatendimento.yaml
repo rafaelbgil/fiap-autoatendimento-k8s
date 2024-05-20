@@ -15,7 +15,7 @@ spec:
         app: app-autoatendimento
     spec:
       containers:
-        - image: rafaelbgil/fiap-postech-app:1.15
+        - image: afaelbgil/fiap-autoatendimento-app-pedido:1.4
           name: fiap-pos-tech
           env:
             - name: DATABASE_PORT
@@ -38,6 +38,11 @@ spec:
                 secretKeyRef:
                   name: fiap-secrets-db
                   key: DATABASE_PASSWORD
+            - name: DJANGO_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-secrets-db
+                  key: DJANGO_KEY
 
           #Secrets como variavies para aws
             - name: AWS_ACCESS_KEY_ID

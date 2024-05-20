@@ -23,7 +23,8 @@ jobs:
       COGNITO_POOL: ${{ secrets.COGNITO_POOL }}
       COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
       COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
-      
+      MERCADOPAGO_TOKEN: ${{ secrets.MERCADOPAGO_TOKEN }}
+      MERCADOPAGO_EMAIL: ${{ secrets.MERCADOPAGO_EMAIL }}
       
     # Utilizar o bash para comandos do terraform
     defaults:
@@ -51,10 +52,16 @@ jobs:
       run: aws eks update-kubeconfig --name fiap-cluster-k8s
     
     - name: Assegurar secrets de banco para o k8s
-      run: kubectl create --dry-run=client secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD" -o yaml > fiap-secrets-db.yml
+      run: kubectl create --dry-run=client secret generic fiap-secrets-db --from-literal=DATABASE_USER="$DATABASE_USER" --from-literal=DATABASE_HOST="$DATABASE_HOST" --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD" --from-literal=DJANGO_KEY="$DJANGO_KEY" -o yaml > fiap-secrets-db.yml
 
     - name: Aplicar secrets de banco
       run: kubectl apply -f fiap-secrets-db.yml
+
+    - name: Assegurar secrets para o micro servico cobranca
+      run: kubectl create --dry-run=client secret generic fiap-secrets-cobranca --from-literal=MERCADOPAGO_EMAIL="$MERCADOPAGO_EMAIL" --from-literal=MERCADOPAGO_TOKEN="$MERCADOPAGO_TOKEN" -o yaml > fiap-secrets-cobranca.yml
+
+    - name: Aplicar secrets de micro servico cobranca
+      run: kubectl apply -f fiap-secrets-cobranca.yml
 
     - name: Assegurar secrets da aws para o k8s
       run: kubectl create --dry-run=client secret generic fiap-secrets-aws --from-literal=AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" --from-literal=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" -o yaml > fiap-secrets-aws.yml
