@@ -15,7 +15,7 @@ spec:
         app: cobranca
     spec:
       containers:
-        - image: rafaelbgil/fiap-autoatendimento-app-cobranca:1.0
+        - image: rafaelbgil/fiap-autoatendimento-app-cobranca:1.1
           name: cobranca
           env:
             - name: MONGODB_SERVER
