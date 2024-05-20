@@ -25,6 +25,7 @@ jobs:
       COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
       MERCADOPAGO_TOKEN: ${{ secrets.MERCADOPAGO_TOKEN }}
       MERCADOPAGO_EMAIL: ${{ secrets.MERCADOPAGO_EMAIL }}
+      DJANGO_KEY: ${{ secrets.DJANGO_KEY }}
       
     # Utilizar o bash para comandos do terraform
     defaults:

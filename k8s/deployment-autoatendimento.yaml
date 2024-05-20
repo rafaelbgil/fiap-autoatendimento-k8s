@@ -15,7 +15,7 @@ spec:
         app: app-autoatendimento
     spec:
       containers:
-        - image: afaelbgil/fiap-autoatendimento-app-pedido:1.4
+        - image: rafaelbgil/fiap-autoatendimento-app-pedido:1.4
           name: fiap-pos-tech
           env:
             - name: DATABASE_PORT
