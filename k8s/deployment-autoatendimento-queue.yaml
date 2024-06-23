@@ -15,7 +15,7 @@ spec:
         app: app-autoatendimento-queue
     spec:
       containers:
-        - image: rafaelbgil/fiap-autoatendimento-app-pedido:1.16
+        - image: rafaelbgil/fiap-autoatendimento-app-pedido:1.17
           name: fiap-pos-tech
           command: ["celery"]
           args: ["-A", "autoatendimento", "worker", "-l", "INFO"]
