@@ -100,10 +100,4 @@ spec:
             requests:
               cpu: 100m
 
-          livenessProbe:
-            httpGet:
-              path: '/pedido/'
-              port: 8000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            failureThreshold: 30
+          
