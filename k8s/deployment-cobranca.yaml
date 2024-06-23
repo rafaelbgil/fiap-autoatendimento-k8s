@@ -15,11 +15,13 @@ spec:
         app: cobranca
     spec:
       containers:
-        - image: rafaelbgil/fiap-autoatendimento-app-cobranca:1.2
+        - image: rafaelbgil/fiap-autoatendimento-app-cobranca:1.5
           name: cobranca
           env:
             - name: MONGODB_SERVER
               value: "mongodb"
+            - name: RABBIT_SERVER
+              value: "rabbitmq"
             - name: URL_DOMINIO
               value: "https://teste.com.br"
             - name: PEDIDO_API_URL

@@ -15,7 +15,7 @@ spec:
         app: catalogo
     spec:
       containers:
-        - image: rafaelbgil/fiap-autoatendimento-app-catalogo:1.2
+        - image: rafaelbgil/fiap-autoatendimento-app-catalogo:1.5
           name: catalogo
           env:
             - name: DATABASE_PORT

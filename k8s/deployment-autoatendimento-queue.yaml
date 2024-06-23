@@ -2,21 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: app-autoatendimento
-  name: app-autoatendimento
+    app: app-autoatendimento-queue
+  name: app-autoatendimento-queue
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app-autoatendimento
+      app: app-autoatendimento-queue
   template:
     metadata:
       labels:
-        app: app-autoatendimento
+        app: app-autoatendimento-queue
     spec:
       containers:
         - image: rafaelbgil/fiap-autoatendimento-app-pedido:1.15
           name: fiap-pos-tech
+          command: ["celery"]
+          args: ["-A", "autoatendimento", "worker", "-l", "INFO"]
           env:
             - name: DATABASE_PORT
               value: "3306"
@@ -105,28 +107,3 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 30
-
-        - name: proxy-reverso
-          image: rafaelbgil/fiap-pos-tech-proxy:v1
-          ports:
-            - containerPort: 8080
-          resources:
-            requests:
-              cpu: 100m
-
-          volumeMounts:
-            - name: nginx-app-conf
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-          livenessProbe:
-            httpGet:
-              path: '/static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js'
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            failureThreshold: 30
-
-      volumes:
-        - name: nginx-app-conf
-          configMap:
-            name: nginx-app-conf
