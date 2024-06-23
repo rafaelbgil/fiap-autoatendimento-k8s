@@ -57,7 +57,8 @@ COGNITO_CLIENT_SECRET
 - variável MERCADOPAGO_TOKEN
 - variável MERCADOPAGO_EMAIL
 
-obs.: Caso não seja executado em ambiente AWS será necessário remover dos arquivos yaml as configurações referentes as
+obs.1: Será necessário rever e ajustar as variáveis utilizados pelos objetos de deployment.
+obs.²: Caso não seja executado em ambiente AWS será necessário remover dos arquivos yaml as configurações referentes as
 variáveis do cognito e secrets AWS.
 
 **Para executar migrations do banco e carga de dados execute:(necessário executar manualmente somente uma vez)**
